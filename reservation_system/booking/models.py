@@ -9,7 +9,7 @@ from datetime import timedelta
 class Booking(models.Model):
 
     room = models.ForeignKey(Room, on_delete=models.SET_NULL, null=True)
-    # guest = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     email = models.EmailField(null=True)
     hotel = models.ForeignKey(Hotel, on_delete=models.SET_NULL, null=True)
     checkin_date = models.DateField()

@@ -1,18 +1,21 @@
 import datetime
 from rest_framework.views import APIView
-from .serializers import BookingSerializers, ShowGuestBookingSerializers, ShowBookingSerializers, ShowBillSerlializers, SearchSerializers
+from .serializers import BookingSerializers, ShowGuestBookingSerializers, ShowBookingSerializers, ShowBillSerlializers,\
+    SearchSerializers, RequestBookingSerializers
 from rest_framework.response import Response
 from .models import Booking, Bill
 from room.models import Room, Hotel
 from room.serializers import RoomSerializers
 from drf_spectacular.utils import extend_schema, OpenApiParameter, OpenApiExample
 from drf_spectacular.types import OpenApiTypes
-from django.shortcuts import render
 from dateutil.parser import parse
-from django.db.models import Q
+from django.contrib.auth.models import AnonymousUser
+from  rest_framework.permissions import AllowAny, IsAuthenticated
 
 
 class BookingView(APIView):
+    authentication_classes = []
+    permission_classes = []
 
     def create_obj_bill(self, obj_booking, request, validated_data):
         obj_room = Room.objects.get(id=validated_data['room'].id)
@@ -28,10 +31,14 @@ class BookingView(APIView):
 
     @extend_schema(
         summary='create Booking',
-        request=BookingSerializers,
+        request=RequestBookingSerializers,
     )
     def post(self, request):
-        serializer = BookingSerializers(data=request.data)
+        if request.user == AnonymousUser():
+            user = AnonymousUser()
+        else:
+            user = request.user.id
+        serializer = BookingSerializers(data=request.data, context={'user': user})
         serializer.is_valid(raise_exception=True)
         reservations = Booking.objects.filter(room_id=request.data['room']).order_by('checkin_date')
 
@@ -88,6 +95,8 @@ class BookingView(APIView):
 
 
 class SearchView(APIView):
+    permission_classes = []
+    authentication_classes = []
     class STATUS:
         ALL = 'all',
 

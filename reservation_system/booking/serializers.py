@@ -5,11 +5,18 @@ from model_utils.choices import Choices
 from utils.commen import IdSerializer
 
 
+class RequestBookingSerializers(serializers.Serializer):
+    room = serializers.CharField(max_length=255)
+    email = serializers.EmailField()
+    checkin_date = serializers.DateField()
+    checkout_date = serializers.DateField()
+
+
 class BookingSerializers(serializers.ModelSerializer):
 
     class Meta:
         model = Booking
-        fields = ('room', 'email', 'checkin_date', 'checkout_date')
+        fields = ('room', 'user', 'email', 'checkin_date', 'checkout_date')
 
 
 class ShowBookingSerializers(serializers.Serializer):
