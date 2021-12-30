@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>This is my booking</title>
+</head>
+<body>
+{%if booking %}
+    <ul>
+        {%for obj in booking %}
+            <li>
+                <p>Hotel Characteristics</p>
+                     Hotel Name: {{obj.hotel.name}}
+                <br>
+                    Hotel Address : {{obj.hotel.address}}
+
+<!--                <a href="/booking/{{obj.id}}/">{{obj.hotel.name}}</a>-->
+            </li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p> error</p>
+{% endif %}
+</body>
+</html>
